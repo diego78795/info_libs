@@ -7,15 +7,7 @@ import 'package:package_info_plus/package_info_plus.dart';
 class HomeController extends GetxController {
   HomeController();
 
-  Future<void> handleShare({String? text, String? file}) async {
-    if (text != null && file != null) {
-      Share.shareXFiles([XFile(file)], text: text);
-    } else if (text != null) {
-      Share.share(text);
-    } else if (file != null) {
-      Share.shareXFiles([XFile(file)]);
-    }
-  }
+  bool isLoading = true;
 
   // App Info
   String appName = '';
@@ -32,6 +24,29 @@ class HomeController extends GetxController {
   bool isOnExternalStorage = false;
   bool isSafeDevice = false;
   bool isDevelopmentModeEnable = false;
+
+  Future<void> handleShare({String? text, String? file}) async {
+    if (text != null && file != null) {
+      Share.shareXFiles([XFile(file)], text: text);
+    } else if (text != null) {
+      Share.share(text);
+    } else if (file != null) {
+      Share.shareXFiles([XFile(file)]);
+    }
+  }
+
+  @override
+  void onInit() {
+    fetchData();
+    super.onInit();
+  }
+
+  Future<void> fetchData() async {
+    await fetchAppInfo();
+    await fetchSafeInfo();
+    isLoading = false;
+    update();
+  }
 
   Future<void> fetchAppInfo() async {
     PackageInfo packageInfo = await PackageInfo.fromPlatform();
