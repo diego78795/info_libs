@@ -1,10 +1,21 @@
 import 'package:get/get.dart';
 
-import 'package:package_info_plus/package_info_plus.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:safe_device/safe_device.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
 class HomeController extends GetxController {
   HomeController();
+
+  Future<void> handleShare({String? text, String? file}) async {
+    if (text != null && file != null) {
+      Share.shareXFiles([XFile(file)], text: text);
+    } else if (text != null) {
+      Share.share(text);
+    } else if (file != null) {
+      Share.shareXFiles([XFile(file)]);
+    }
+  }
 
   // App Info
   String appName = '';
