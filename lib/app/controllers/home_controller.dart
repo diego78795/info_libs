@@ -10,6 +10,8 @@ class HomeController extends GetxController {
   String packageName = '';
   String version = '';
   String buildNumber = '';
+  String buildSignature = '';
+  String? installerStore = '';
 
   Future<void> fetchInfoApp() async {
     PackageInfo packageInfo = await PackageInfo.fromPlatform();
@@ -18,5 +20,7 @@ class HomeController extends GetxController {
     packageName = packageInfo.packageName;
     version = packageInfo.version;
     buildNumber = packageInfo.buildNumber;
+    buildSignature = packageInfo.buildSignature;
+    installerStore = packageInfo.installerStore;
   }
 }
