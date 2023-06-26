@@ -9,6 +9,11 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  get: ^4.6.5
+  package_info_plus: ^4.0.2
+  device_info_plus: ^9.0.2
+  safe_device: ^1.1.4
+  share_plus: ^7.0.2
 
 dev_dependencies:
   flutter_test:
