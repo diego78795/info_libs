@@ -1,6 +1,10 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:get/get.dart';
+import 'package:http/http.dart' as http;
 
 import 'package:share_plus/share_plus.dart';
 import 'package:geolocator/geolocator.dart';
@@ -11,6 +15,8 @@ class HomeController extends GetxController {
   HomeController();
 
   bool isLoading = true;
+  String qrCodeImage =
+      'https://cdn.qr-code-generator.com/account27137545/qrcodes/67477421.png?Expires=1687886290&Signature=NHyQ2x~tKgKWNoA~BAvVB5F7hZlvwzvh-tTNNPgaY6LyjqEut1j03gVQIp4iRD~D1Bt9n1IVIPQ5gVrHKPTafdxlSr3AhpdhKD3FJyC8vZ96M5jSLBXQXaKM~dwMr87KLAVlxSzYHTncMAffNa7A58ULFqiJWcPPte2Bgk9TeAkdxp-s2EdmDMXEpJSSfpmHPcK6cN5R9A5ewlrvB3dJKvSiwVBMlaDbQTOQpBoOENeNq7LIF23EAtLaJi6ZfwNrwsm7zhV5VZvdpSkZaqjThTOIRqWBpIZcPkwYE2u6aKtsoAphWfdS6wWBaiHwHd7SpmrQwrvYaepIWPmJjjQ-Mw__&Key-Pair-Id=KKMPOJU8AYATR';
 
   // App Info
   String appName = '';
@@ -28,13 +34,25 @@ class HomeController extends GetxController {
   bool isSafeDevice = false;
   bool isDevelopmentModeEnable = false;
 
-  Future<void> handleShare({String? text, String? file}) async {
-    if (text != null && file != null) {
-      Share.shareXFiles([XFile(file)], text: text);
+  Future<String> getImage(String urlImage) async {
+    final url = Uri.parse(urlImage);
+    final response = await http.get(url);
+    final bytes = response.bodyBytes;
+    final temp = await getTemporaryDirectory();
+    final path = '${temp.path}/image.png';
+    File(path).writeAsBytesSync(bytes);
+    return path;
+  }
+
+  Future<void> handleShare({String? text, String? urlImage}) async {
+    if (text != null && urlImage != null) {
+      String file = await getImage(urlImage);
+      Share.shareFiles([file], text: text);
     } else if (text != null) {
       Share.share(text);
-    } else if (file != null) {
-      Share.shareXFiles([XFile(file)]);
+    } else if (urlImage != null) {
+      String file = await getImage(urlImage);
+      Share.shareFiles([file]);
     }
   }
 
