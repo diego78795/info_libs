@@ -16,12 +16,12 @@ class HomeController extends GetxController {
   HomeController();
 
   String environment = 'development';
-  bool suport32Bits = false;
-  bool suport64Bits = false;
+  bool suport32Bits = true;
+  bool suport64Bits = true;
 
   bool isLoading = true;
   String qrCodeImage =
-      'https://cdn.qr-code-generator.com/account27137545/qrcodes/67477421.png?Expires=1687886290&Signature=NHyQ2x~tKgKWNoA~BAvVB5F7hZlvwzvh-tTNNPgaY6LyjqEut1j03gVQIp4iRD~D1Bt9n1IVIPQ5gVrHKPTafdxlSr3AhpdhKD3FJyC8vZ96M5jSLBXQXaKM~dwMr87KLAVlxSzYHTncMAffNa7A58ULFqiJWcPPte2Bgk9TeAkdxp-s2EdmDMXEpJSSfpmHPcK6cN5R9A5ewlrvB3dJKvSiwVBMlaDbQTOQpBoOENeNq7LIF23EAtLaJi6ZfwNrwsm7zhV5VZvdpSkZaqjThTOIRqWBpIZcPkwYE2u6aKtsoAphWfdS6wWBaiHwHd7SpmrQwrvYaepIWPmJjjQ-Mw__&Key-Pair-Id=KKMPOJU8AYATR';
+      'https://cdn.qr-code-generator.com/account27137545/qrcodes/67477421.png?Expires=1687890071&Signature=pSjv0f9dZGZxqRyLVm~B3UiYbgbXcVk2Lm1hoHE45kkmsXeZu5E6zvgI2YJq1nNDR0c-IiMwL3vbPUSEU4n~RMICLf8CN-KE2dqVNqEq2PJwOOvaGbfwoG-unEtt2DtvmPYcImSM-9~MEbPHt4qPeu8xoliLDVWgjAyxjZuzB3jXX3CSEwQ1j7spR4u~tZQrJOmzPihQncmB0F8aLyw9slyyunoaGoQ6ACBIOS6RgOsvLkAU7QIE7ixjdmMtmqNpZBaiQhZ-jcAiskn1VDN6GTNu2F5OEcAH9-xG0gmPtDYDuesDWZIyxMVMENRnJ3gTdofhXl94o4~yy6ayfi18bA__&Key-Pair-Id=KKMPOJU8AYATR';
 
   // App Info
   String appName = '';
@@ -81,13 +81,11 @@ class HomeController extends GetxController {
 
   Future<void> checkRequirements() async {
     if (environment == 'production' && isSafeDevice) {
-      const CupertinoAlertDialog(title: Text('Este dispositivo não é seguro'));
+      debugPrint('Este dispositivo não é seguro');
     } else if (suport32Bits && deviceData['supported32BitAbis'].isEmpty) {
-      const CupertinoAlertDialog(
-          title: Text('Este dispositivo não é tem suporte para 32 bits'));
+      debugPrint('Este dispositivo não é tem suporte para 32 bits');
     } else if (suport64Bits && deviceData['supported64BitAbis'].isEmpty) {
-      const CupertinoAlertDialog(
-          title: Text('Este dispositivo não é tem suporte para 64 bits'));
+      debugPrint('Este dispositivo não é tem suporte para 64 bits');
     }
   }
 
