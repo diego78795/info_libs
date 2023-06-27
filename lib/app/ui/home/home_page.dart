@@ -51,7 +51,31 @@ class HomePage extends GetView<HomeController> {
                 'label': 'Dispositivo esta no modo desenvolvedor?',
                 'data': _.isDevelopmentModeEnable ? 'Sim' : 'Não'
               },
-            ])
+            ]),
+            TextButton(
+                onPressed: () => {_.handleShare(urlImage: _.qrCodeImage)},
+                child: Image.network(
+                  _.qrCodeImage,
+                )),
+            TextButton(
+                onPressed: () => {
+                      _.handleShare(
+                          text:
+                              'https://api.whatsapp.com/send?phone=5521912345678')
+                    },
+                child: Text('https://api.whatsapp.com/send?phone=5521912345678',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(color: Colors.blue[300], fontSize: 16))),
+            ElevatedButton(
+                onPressed: () => {
+                      _.handleShare(
+                          urlImage: _.qrCodeImage,
+                          text:
+                              'https://api.whatsapp.com/send?phone=5521912345678')
+                    },
+                child: const Text('Compartilhar link e qr code',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontSize: 16))),
           ]));
     }));
   }
