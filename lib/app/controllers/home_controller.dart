@@ -1,6 +1,9 @@
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 
 import 'package:share_plus/share_plus.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:safe_device/safe_device.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
@@ -62,7 +65,21 @@ class HomeController extends GetxController {
   Future<void> fetchSafeInfo() async {
     isJailBroken = await SafeDevice.isJailBroken;
     isRealDevice = await SafeDevice.isRealDevice;
-    canMockLocation = await SafeDevice.canMockLocation;
+    LocationPermission permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        const CupertinoAlertDialog(title: Text('Permissão negada'));
+      } else {
+        canMockLocation = await SafeDevice.canMockLocation;
+      }
+    } else if (permission == LocationPermission.deniedForever) {
+      const CupertinoAlertDialog(
+          title: Text(
+              'Não foi possivel verificar se a localização é emulada pois não temos permissão'));
+    } else {
+      canMockLocation = await SafeDevice.canMockLocation;
+    }
     isOnExternalStorage = await SafeDevice.isOnExternalStorage;
     isSafeDevice = await SafeDevice.isSafeDevice;
     isDevelopmentModeEnable = await SafeDevice.isDevelopmentModeEnable;
