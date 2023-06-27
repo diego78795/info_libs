@@ -9,6 +9,7 @@ import 'package:http/http.dart' as http;
 import 'package:share_plus/share_plus.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:safe_device/safe_device.dart';
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
 class HomeController extends GetxController {
@@ -33,6 +34,9 @@ class HomeController extends GetxController {
   bool isOnExternalStorage = false;
   bool isSafeDevice = false;
   bool isDevelopmentModeEnable = false;
+
+  // Device Info
+  Map<String, dynamic> deviceData = {};
 
   Future<String> getImage(String urlImage) async {
     final url = Uri.parse(urlImage);
@@ -65,6 +69,7 @@ class HomeController extends GetxController {
   Future<void> fetchData() async {
     await fetchAppInfo();
     await fetchSafeInfo();
+    await fetchDeviceInfo();
     isLoading = false;
     update();
   }
@@ -101,5 +106,43 @@ class HomeController extends GetxController {
     isOnExternalStorage = await SafeDevice.isOnExternalStorage;
     isSafeDevice = await SafeDevice.isSafeDevice;
     isDevelopmentModeEnable = await SafeDevice.isDevelopmentModeEnable;
+  }
+
+  Future<void> fetchDeviceInfo() async {
+    DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+    deviceData = switch (defaultTargetPlatform) {
+      TargetPlatform.android =>
+        getDeviceInfoAndroid(await deviceInfo.androidInfo),
+      TargetPlatform.iOS => const <String, dynamic>{
+          'Error:': 'Este aplicativo não possui suporte para iOS'
+        },
+      TargetPlatform.linux => <String, dynamic>{
+          'Error:': 'Este aplicativo não possui suporte para linux'
+        },
+      TargetPlatform.windows => <String, dynamic>{
+          'Error:': 'Este aplicativo não possui suporte para windows'
+        },
+      TargetPlatform.macOS => <String, dynamic>{
+          'Error:': 'Este aplicativo não possui suporte para macOS'
+        },
+      TargetPlatform.fuchsia => <String, dynamic>{
+          'Error:': 'Este aplicativo não possui suporte para fuchsia'
+        }
+    };
+    update();
+  }
+
+  Map<String, dynamic> getDeviceInfoAndroid(AndroidDeviceInfo build) {
+    return {
+      'model': build.model,
+      'hardware': build.hardware,
+      'supported32BitAbis': build.supported32BitAbis,
+      'supported64BitAbis': build.supported64BitAbis,
+      'host': build.host,
+      'id': build.id,
+      'widthPx': build.displayMetrics.widthPx,
+      'heightPx': build.displayMetrics.heightPx,
+      'serialNumber': build.serialNumber,
+    };
   }
 }
