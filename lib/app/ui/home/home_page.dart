@@ -15,14 +15,41 @@ class HomePage extends GetView<HomeController> {
               padding: const EdgeInsets.all(10),
               children: [
             CardInfo(title: 'Informações do aplicativo', data: [
-              {'label': 'Nome', 'data': _.appName},
-              {'label': 'Nome do aplicativo', 'data': _.packageName},
-              {'label': 'Versão', 'data': _.version},
-              {'label': 'Numero do build', 'data': _.buildNumber},
-              {'label': 'Assinatura do build', 'data': _.buildSignature},
+              {'label': 'Nome;', 'data': _.appName},
+              {'label': 'Nome do aplicativo:', 'data': _.packageName},
+              {'label': 'Versão:', 'data': _.version},
+              {'label': 'Numero do build:', 'data': _.buildNumber},
+              {'label': 'Assinatura do build:', 'data': _.buildSignature},
               {
                 'label': 'Loja que foi instalado',
                 'data': '${_.installerStore}'
+              },
+            ]),
+            const SizedBox(height: 20),
+            CardInfo(title: 'Informações de segurança', data: [
+              {
+                'label': 'Tem jailbreak ou é um android?',
+                'data': _.isJailBroken ? 'Sim' : 'Não'
+              },
+              {
+                'label': 'É um dispositivo real?',
+                'data': _.isRealDevice ? 'Sim' : 'Não'
+              },
+              {
+                'label': 'Esta com a localização emulada?',
+                'data': _.canMockLocation ? 'Sim' : 'Não'
+              },
+              {
+                'label': 'Esta armazenado em uma memoria externa?',
+                'data': _.isOnExternalStorage ? 'Sim' : 'Não'
+              },
+              {
+                'label': 'É um dispositivo seguro?',
+                'data': _.isSafeDevice ? 'Sim' : 'Não'
+              },
+              {
+                'label': 'Dispositivo esta no modo desenvolvedor?',
+                'data': _.isDevelopmentModeEnable ? 'Sim' : 'Não'
               },
             ])
           ]));
@@ -82,7 +109,7 @@ class TextInfo extends StatelessWidget {
     return GetBuilder<HomeController>(
       builder: (_) {
         return Text(
-          "$label: $data",
+          "$label $data",
           style: const TextStyle(
             fontSize: 16,
           ),
